@@ -1,0 +1,46 @@
+{% extends 'layout/default_beer.twig' %}
+
+{% block body %}
+
+<section id='profile_section' class="container mt-5">
+    <h1>{{ page }}</h1>
+    <article class="row">
+        <form method="POST" action="" class="col-12 col-sm">
+            <h2>Mon adresse</h1>
+            <div>
+                <label>Nom</label>
+                <input class="form-control" type="text" name="lastname" value="{{ address.lastname }}" placeholder="Votre nom">
+            </div>
+            <div>
+                <label>Prénom</label>
+                <input class="form-control" type="text" name="firstname" value="{{ address.firstname }}" placeholder="Votre prénom">
+            </div>
+            <div>
+                <label>Adresse</label>
+                <input class="form-control" type="text" name="address" value="{{ address.address }}" placeholder="Votre adresse">
+            </div>
+            <div>
+                <label>Code Postal</label>
+                <input class="form-control" type="text" name="zipCode" value="{{ address.zipCode }}" placeholder="Votre code postal">
+            </div>
+            <div>
+                <label>Ville</label>
+                <input class="form-control" type="text" name="city" value="{{ address.city}}" placeholder="Votre ville">
+            </div>
+            <div>
+                <label>Pays</label>
+                <input class="form-control" type="text" name="country" value="{{ address.country}}" placeholder="Votre pays">
+            </div>
+            <div>
+                <label>Téléphone</label>
+                <input class="form-control" type="tel" name="phone" value="{{ address.phone }}" placeholder="Votre numéro de téléphone">
+            </div>
+            <input class="form-control" type="hidden" name="user_id" value="{{ address.id }}" />   
+            <button type="submit" class="btn btn-primary mt-2 mb-5">Modifier</button>
+        </form>
+        <div>
+            <a href="{{ address.url }}/disable" class="btn btn-danger">Supprimer</a>
+        </div>
+</section>
+
+{% endblock %}
