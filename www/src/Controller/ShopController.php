@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use \Core\Controller\Controller;
+use \Core\Model\Table;
 
 class ShopController extends Controller
 {
@@ -9,6 +10,7 @@ class ShopController extends Controller
         $this->loadModel('beer');
         $this->loadModel('userinfos');
         $this->loadModel('ordersbeer');
+        $this->loadModel('orders');
     }
 
     public function index()
@@ -43,8 +45,28 @@ class ShopController extends Controller
             $ids = implode($ids, ',');
             $beers = $this->beer->getAllInIds($ids);
             $orderTotal = 0;
+            $fields=[];
+            //$fields[]=beer[id][priceHT][qty];
+            // user_id	int(11)	//$id
+            // beer_id	int(11)	//$beer.getId()
+            // beerQty	int(11)	//qty[$key]
+            // beerpriceHT	float	//$beer.getPrice()
+            // token
+            
+            $token = rand(100000000000, 999999999999);
             foreach($beers as $key => $value) {
+                $fields['user_id']=$id;
+                $fields['beer_id']=$value->getId();
+                $fields['beerQty']=$qty[$key];
+                $fields['beerpriceHT']=$value->getPrice();
+                $fields['token']=$token;
                 $orderTotal += $value->getPrice() * constant('TVA') * $qty[$key];
+                $this->ordersbeer->create($fields);
+            }
+            //insert() des commandes par ligne dans la table;
+            //create($fields);
+            foreach($addresses as $address){
+                $ischoice=$address;
             }
             
             return $this->render('shop/confirmationDeCommande', [
@@ -52,7 +74,7 @@ class ShopController extends Controller
                 'data' => $_POST,
                 'qty' => $qty,
                 'order' => $orderTotal,
-                'addresses' => $addresses
+                'choix' => $ischoice
             ]);
         }
 
@@ -65,33 +87,13 @@ class ShopController extends Controller
     }
 
     public function contact() {
-        return $this->render('shop/contact', [
+        return $this->render('mentions/contact', [
         ]);
     }
 
-    public function basket()
-    {
-        
-        $requiredFields=['user_id', 'beer_id', 'beerPriceHT', 'beerQTY', 'token'];
-        
-        foreach($requiredFields as $key => $value) {
-            $fields[$value] = htmlspecialchars($_POST[$value]);
-        }
-        $ok = $this->ordersbeer->create($fields);
-        dd($ok);
-        $_SESSION['panier'] = array();
-        if ($ok) {
-            echo "ok";
-            die;
-        }else{
-            echo "error";
-            die;
-        }
-    }
 
     public function choice()
     {
-        dd("test");
         $id = $_POST['id'];
         $user_id = $_POST['user_id'];
         $form = $this->user_infos->find($id);
@@ -112,4 +114,5 @@ class ShopController extends Controller
             echo 'error';
         }
     }
+
 }

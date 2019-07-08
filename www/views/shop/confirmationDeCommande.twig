@@ -32,11 +32,11 @@
 			</tr>
 		</tbody>
 	</table>
-	{% for address in addresses %}
-	<p style="text-align: center">Celle-ci vous sera livrée au {{ address.address }} {{ address.zipCode }} {{ address.city }} sous deux jours</p>
+	
+	<p style="text-align: center">Celle-ci vous sera livrée au {{ choix.address }} {{ choix.zipCode }} {{ choix.city }} sous deux jours</p>
 		<p style="text-align:center">
 			<small>Si vous ne réglez pas sous 10 jours, le prix de votre commande sera majoré.(25%/jour de retard)</small>
 		</p>
-	{% endfor %}
+	
 </section>
 {% endblock %}

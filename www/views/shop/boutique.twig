@@ -22,7 +22,7 @@
 					<input type="hidden" name="user_id{{ beer.id }}" value="{{ session.user.id }}" />
 					<input type="hidden" name="token{{ beer.id }}" value="{{ session.token }}" />
 					<div class="input-group-append">
-						<button class="btn btn-primary" type="button" onclick="addBasket({{ beer.id }})">Ajouter au panier</button>
+						<button class="btn btn-primary" type="button" onclick="ajout({{ beer.id }}, {{ beer.price }})">Ajouter au panier</button>
 					</div>
 			</form>
 		</article>

@@ -64,13 +64,13 @@ function chooseAddress(id, user_id){
 
 function addBasket(id) {
 	
-	var user_id = document.getElementsByName('user_id'+id)[0].value;
-	var beer_id = document.getElementsByName('beer_id'+id)[0].value;
-	var beerPriceHT = document.getElementsByName('beer_priceHT'+id)[0].value;
-	var beerQTY = document.getElementsByName('qty'+id)[0].value;
-	var token = document.getElementsByName('token'+id)[0].value;
+	var user_id = document.getElementsById('user_id'+id)[0].value;
+	var beer_id = document.getElementsById('beer_id'+id)[0].value;
+	var beerPriceHT = document.getElementsById('beer_priceHT'+id)[0].value;
+	var beerQTY = document.getElementsById('qty'+id)[0].value;
+	var token = document.getElementsById('token'+id)[0].value;
 	
-	$.post('/basket', {user_id:user_id, beer_id:beer_id, beerPriceHT:beerPriceHT, beerQTY : beerQTY, token:token}, function(data){
+	$.post('/panier', {user_id:user_id, beer_id:beer_id, beerPriceHT:beerPriceHT, beerQTY : beerQTY, token:token}, function(data){
 		if (data === "ok") {
 			console.log("basketstyle");
 			alert("Votre produit a bien été ajouté à votre panier");

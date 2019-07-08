@@ -1,0 +1,25 @@
+{% extends 'layout/default_beer.twig' %}
+
+<form method="POST" action="/bondecommande" id="formPurchase" class="container mt-5 mb-5">
+
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Nomination</th>
+				<th>Prix HT</th>
+				<th>Prix TTC</th>
+				<th>Quantité</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for key, beer in beers %}
+				<tr>
+					<td>{{ beer.title }}</td>
+					<td id="PHT_{{ key }}">{{ beer.price|number_format(2, ',', '.') }}€</td>
+					<td id="PTTC_{{ key }}">{{ (beer.price * constant.TVA)|number_format(2, ',', '.') }}€</td>
+					<td><input class="form-control" type="number" min="0" name="qty[{{ beer.id }}]" value="0" oninput="calcPrice(this, {{ key }}, {{ beer.price }});" /></td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+	<button class="btn btn-primary" type="submit">Valider pabier</button>
