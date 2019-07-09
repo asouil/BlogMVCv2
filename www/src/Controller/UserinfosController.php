@@ -6,7 +6,7 @@ use \Core\Controller\Controller;
 class UserinfosController extends Controller
 {
     public function __construct() {
-
+        $this->loadModel('user');
         $this->loadModel('userinfos');
         $this->loadModel('orders');
     }
@@ -107,11 +107,11 @@ class UserinfosController extends Controller
         }
 
         $orders=$this->orders->all();
-        dd($orders);
-
+        $userid=$_SESSION['user']->getId();
+        $orders= $this->orders->findall($userid, "user_id"); 
+        //$userinfo=$this->userinfos->findall();
         return $this->render('user/commandes' ,[
-            'orders' => $orders,
-            'userinfo' => $userinfo
+            'orders' => $orders
         ]);
     }
 }

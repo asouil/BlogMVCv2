@@ -91,7 +91,7 @@ class ShopController extends Controller
             }
             $status=1;
             
-            $fields2=['userinfos_id'=>$userinfoid, 'priceHT'=>$priceHT, 'port'=>$port, 'ordersTVA'=>$tva, 'token'=>$token, 'status_id'=>$status];
+            $fields2=['user_id'=>$id, 'userinfos_id'=>$userinfoid, 'priceHT'=>$priceHT, 'port'=>$port, 'ordersTVA'=>$tva, 'token'=>$token, 'status_id'=>$status];
             $this->orders->create($fields2);
 
             return $this->render('shop/confirmationDeCommande', [
@@ -105,7 +105,7 @@ class ShopController extends Controller
         }
 
         $beers = $this->beer->all();
-        $user_id=$_SESSION['user']->getId();
+        
         return $this->render('shop/bondecommande', [
             'beers' => $beers,
             'addresses' => $addresses

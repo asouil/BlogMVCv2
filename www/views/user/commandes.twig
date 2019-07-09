@@ -9,10 +9,9 @@
             {% for order in orders %}
             <a href="{{ order.url }}" class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">{{ order.id }} {{ order.price }}</h5>
+                    <h5 class="mb-1">Commande n°: {{ order.id }} d'un montant de {{ order.priceTTC|number_format(2,",",".") }} €</h5>
                 </div>
-                <p class="mb-1">{{ user.lastname }}</p>
-                <small>{{ user.city }}</small>
+                <p class="mb-1">{{ userinfo.lastname }}</p>
             </a>
             {% endfor %}
         </div>

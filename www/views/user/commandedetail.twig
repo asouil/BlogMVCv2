@@ -1,7 +1,7 @@
 {% extends 'layout/default_beer.twig' %}
 
 {% block body %}
-<h1 class="titreduhaut text-center mt-5">Confirmation de commande</h1>
+<h1 class="titreduhaut text-center mt-5">Récapitulatf de commande</h1>
 <section id="commandSection" class="container">
 	<table class="table table-striped">
 		<thead>
@@ -40,11 +40,6 @@
 			
 		</tbody>
 	</table>
-	
-	<p style="text-align: center">Celle-ci sera livrée à {{ choix.firstname }} {{ choix.lastname }} au {{ choix.address }} {{ choix.zipCode }} {{ choix.city }} sous deux jours</p>
-		<p style="text-align:center">
-			<small>Si vous ne réglez pas sous 10 jours, le prix de votre commande sera majoré.(25%/jour de retard)</small>
-		</p>
 	
 </section>
 {% endblock %}

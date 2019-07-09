@@ -64,6 +64,7 @@ $pdo->exec("CREATE TABLE `beer` (
 
   $pdo->exec("CREATE TABLE `orders` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
+    `user_id` int(11) NOT NULL,
     `userinfos_id` int(11) NOT NULL,
     `priceHT` float NOT NULL,
     `port` float NOT NULL DEFAULT 0,

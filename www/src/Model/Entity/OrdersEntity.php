@@ -9,9 +9,12 @@ class OrdersEntity extends Entity
 {
     private $id;
 
+    private $user_id;
     private $userinfos_id;
 
     private $priceTTC;
+
+    private $priceHT;
 
     private $token;
 
@@ -36,8 +39,16 @@ class OrdersEntity extends Entity
     {
         return $this->userinfos_id;
     }
-    public function getPrice() {
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+    public function getPriceTTC() {
+        $this->priceTTC=$this->priceHT*$this->ordersTVA;
         return $this->priceTTC;
+    }
+    public function getPriceHT(){
+        return $this->priceHT;
     }
         /**
      * Get the value of created_at
