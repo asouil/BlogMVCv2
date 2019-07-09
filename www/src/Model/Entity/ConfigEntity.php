@@ -13,19 +13,19 @@ class ConfigEntity extends Entity
     private $port;
     private $ship_limit;
 
-    private function getId(){
+    public function getId(){
         return $this->id;
     }
-    private function getDate(){
+    public function getDate(){
         return $this->date;
     }
-    private function getTva(){
+    public function getTva(){
         return $this->tva;
     }
-    private function getPort(){
+    public function getPort(){
         return $this->port;;
     }
-    private function getShipLimit(){
+    public function getShipLimit(){
         return $this->ship_limit;
     }
 }

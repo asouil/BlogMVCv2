@@ -1,7 +1,6 @@
 {% extends 'layout/default_beer.twig' %}
-
+{% block body %}
 <form method="POST" action="/bondecommande" id="formPurchase" class="container mt-5 mb-5">
-
 	<table class="table table-striped">
 		<thead>
 			<tr>
@@ -22,4 +21,6 @@
 			{% endfor %}
 		</tbody>
 	</table>
-	<button class="btn btn-primary" type="submit">Valider pabier</button>
+	<button class="btn btn-primary" type="submit">Valider panier</button>
+
+{% endblock %}

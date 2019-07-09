@@ -1,0 +1,13 @@
+
+{% extends "layout/default_beer.twig" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+    <section class="row">
+        <div class="col-12 col-sm-6">
+            Julien@apprendre.co
+        </div>
+    </section>
+    {{ paginate | raw }}
+{% endblock %}

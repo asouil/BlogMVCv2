@@ -31,9 +31,13 @@ class Table
         return $this->query("SELECT MAX(id) as lastId FROM {$this->table}", null, true)->lastId;
     }
 
-    public function find($id)
+    public function find($id, $column='id')
     {
-        return $this->query("SELECT * FROM {$this->table} WHERE id=?", [$id], true);
+        return $this->query("SELECT * FROM {$this->table} WHERE $column=?", [$id], true);
+    }
+    public function findall($token, $column='token')
+    {
+        return $this->query("SELECT * FROM {$this->table} WHERE $column=?", [$token], false);
     }
 
     public function all() {

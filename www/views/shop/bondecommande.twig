@@ -8,21 +8,26 @@
 		<br/>
 	{% endif %}
 	<div class="row mb-5 justify-content-center">
+		<h3> Adresse de Livraison : </h3>
+		<select class="form-control card col-md-3 m-1 text-center choix" name="voie" id="address">
 		{% for address in addresses %}
-			<div id="div{{ address.id }}" class="card col-md-3 m-1 text-center choix">
-				<div class="card-body">
-					<h5 class="card-title" id="nom">{{ address.firstname }} {{ address.lastname }}</h5>
-					<p class="card-text" id="adresse">{{ address.address }}</p>
-					<p class="card-text" id="zipCode">{{ address.zipcode }} {{ address.city }}</p>
-					<p class="card-text" id="country">  {{ address.country }} </p>
-					{# <form method="POST" action="#" id="formPurchase" class="container mt-5 mb-5">
-						<input type="hidden" name="id" value="{{ address.id }}" />
-						<input type="hidden" name="user_id" value="{{ address.userId }}" />
-						<button type="button" onclick="chooseAddress({{ address.id }}, {{ address.userId }})" class="btn btn-primary">Choisir</button>
-					</form> #}
+			<option value="{{ address.id }}">
+				<div id="div{{ address.id }}">
+					<div class="card-body">
+						<h5 class="card-title" id="nom">{{ address.firstname }} {{ address.lastname }}</h5>
+						<p class="card-text" id="adresse">{{ address.address }}</p>
+						<p class="card-text" id="zipCode">{{ address.zipcode }} {{ address.city }}</p>
+						<p class="card-text" id="country">  {{ address.country }} </p>
+						{# <form method="POST" action="#" id="formPurchase" class="container mt-5 mb-5">
+							<input type="hidden" name="id" value="{{ address.id }}" />
+							<input type="hidden" name="user_id" value="{{ address.userId }}" />
+							<button type="button" onclick="chooseAddress({{ address.id }}, {{ address.userId }})" class="btn btn-primary">Choisir</button>
+						</form> #}
+					</div>
 				</div>
-			</div>
+			</option>
 		{% endfor %}
+		</select>
 	</div>
 	<table class="table table-striped">
 		<thead>

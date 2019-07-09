@@ -1,0 +1,22 @@
+{% extends 'layout/default_beer.twig' %}
+
+{% block body %}
+
+<section id='profile_section' class="container mt-5">
+    <h1>{{ page }}</h1>
+    <article class="row">
+        <div class="list-group mb-5">
+            {% for order in orders %}
+            <a href="{{ order.url }}" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">{{ order.id }} {{ order.price }}</h5>
+                </div>
+                <p class="mb-1">{{ user.lastname }}</p>
+                <small>{{ user.city }}</small>
+            </a>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+
+{% endblock %}

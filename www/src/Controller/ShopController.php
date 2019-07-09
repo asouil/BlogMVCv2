@@ -11,6 +11,7 @@ class ShopController extends Controller
         $this->loadModel('userinfos');
         $this->loadModel('ordersbeer');
         $this->loadModel('orders');
+        $this->loadModel('config');
     }
 
     public function index()
@@ -21,7 +22,6 @@ class ShopController extends Controller
     public function all() {
 
         $beers = $this->beer->all();
-        
         return $this->render('shop/boutique', [
             'beers' => $beers
         ]);
@@ -65,14 +65,40 @@ class ShopController extends Controller
             }
             //insert() des commandes par ligne dans la table;
             //create($fields);
-            foreach($addresses as $address){
-                $ischoice=$address;
-            }
+            //on récupère le choix gràce au formulaire
+            $ischoice=$this->userinfos->find($_POST['voie']);
+            //envoie de la commande à la bdd
+            $commande=$this->ordersbeer->findall($token, 'token');
+            $userinfoid=$ischoice->getId();
             
+            $priceHT=0;
+            foreach($commande as $key => $value){
+                $priceHT+=$value['beerpriceHT']*$value['beerQty'];
+            }
+
+            //contenu du config
+            $conf=$this->config->last();
+            $conf=$this->config->find($conf);
+
+            $tva = $conf->getTva();//voir pour l'avoir depuis la table config
+            $price=$priceHT*$tva;
+            if($price>$conf->getShipLimit()){
+                $port=0;//idem >ship_limit
+            }
+            else{
+                $orderTotal +=$conf->getPort();
+                $port=$conf->getPort(); //idem pour port
+            }
+            $status=1;
+            
+            $fields2=['userinfos_id'=>$userinfoid, 'priceHT'=>$priceHT, 'port'=>$port, 'ordersTVA'=>$tva, 'token'=>$token, 'status_id'=>$status];
+            $this->orders->create($fields2);
+
             return $this->render('shop/confirmationDeCommande', [
                 'beers' => $beers,
                 'data' => $_POST,
                 'qty' => $qty,
+                'port' => $port,
                 'order' => $orderTotal,
                 'choix' => $ischoice
             ]);
@@ -114,5 +140,14 @@ class ShopController extends Controller
             echo 'error';
         }
     }
-
+    public function basket()
+    {
+        
+        $requiredFields=['user_id', 'beer_id', 'beerPriceHT', 'beerQTY', 'token'];
+        $fields=[];
+        foreach($requiredFields as $key => $value) {
+            $fields[$value] = htmlspecialchars($_POST[$value]);
+        }
+        $this->render('shop/panier', $fields);
+    }
 }

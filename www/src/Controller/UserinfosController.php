@@ -8,6 +8,7 @@ class UserinfosController extends Controller
     public function __construct() {
 
         $this->loadModel('userinfos');
+        $this->loadModel('orders');
     }
 
     public function profile($message = null) {
@@ -54,8 +55,6 @@ class UserinfosController extends Controller
                     }
             }
         }
-
-
         return $this->render('user/profile', [ 'result' => $result ]);
     }
 
@@ -95,5 +94,24 @@ class UserinfosController extends Controller
         
         $this->userinfos->delete($id);
         header('location: /user/profile');
+    }
+
+    public function commandes(){
+        if(null !== $_SESSION['user'] && $_SESSION['user']) {
+            $file = 'profile';
+            $page = 'Mon profil';
+        }
+        else {
+            $file = 'login';
+            $page = 'Connexion';
+        }
+
+        $orders=$this->orders->all();
+        dd($orders);
+
+        return $this->render('user/commandes' ,[
+            'orders' => $orders,
+            'userinfo' => $userinfo
+        ]);
     }
 }
