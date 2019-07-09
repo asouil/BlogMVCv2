@@ -1,7 +1,7 @@
 {% extends 'layout/default_beer.twig' %}
 
 {% block body %}
-<h1 class="titreduhaut text-center mt-5">Récapitulatf de commande</h1>
+<h1 class="titreduhaut text-center mt-5">Récapitulatif de commande</h1>
 <section id="commandSection" class="container">
 	<table class="table table-striped">
 		<thead>
@@ -14,13 +14,13 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for key, beer in beers %}
+			{% for line in lignes %}
 				<tr>
-					<td name="{{ beer.title }}">{{ beer.title }}</td>
-					<td>{{ beer.price|number_format(2, ',', '.') }}€</td>
-					<td>{{ beer.price * constant.TVA|number_format(2, ',', '.') }}€</td>
-					<td id="qty">{{ qty[key] }}</td>
-					<td>{{ ((beer.price * constant.TVA) * qty[key])|number_format(2, ',', '.') }}€</td>
+					<td name="{{ line.beer_id }}">{{ line.beer_id }}</td>
+					<td>{{ line.beerpriceHT|number_format(2, ',', '.') }}€</td>
+					<td>{{ (line.beerpriceHT * constant.TVA)|number_format(2, ',', '.') }}€</td>
+					<td id="qty">{{ line.beerQty }}</td>
+					<td>{{ ((line.beerpriceHT * constant.TVA) * line.beerQty)|number_format(2, ',', '.') }}€</td>
 				</tr>
 			{% endfor %}
 			<tr>
@@ -35,7 +35,7 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><strong>{{ order|number_format(2, ',', '.') }}€</strong></td>
+				<td><strong>{{ (order.priceHT*constant.TVA+port)|number_format(2, ',', '.') }}€</strong></td>
 			</tr>
 			
 		</tbody>

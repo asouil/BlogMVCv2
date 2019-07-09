@@ -68,4 +68,7 @@ class OrdersEntity extends Entity
     public function getPort() {
         return $this->port;
     }
+    public function getToken() {
+        return $this->token;
+    }
 }

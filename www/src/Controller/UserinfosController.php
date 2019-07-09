@@ -9,6 +9,7 @@ class UserinfosController extends Controller
         $this->loadModel('user');
         $this->loadModel('userinfos');
         $this->loadModel('orders');
+        $this->loadModel('ordersbeer');
     }
 
     public function profile($message = null) {
@@ -109,9 +110,37 @@ class UserinfosController extends Controller
         $orders=$this->orders->all();
         $userid=$_SESSION['user']->getId();
         $orders= $this->orders->findall($userid, "user_id"); 
-        //$userinfo=$this->userinfos->findall();
+        
         return $this->render('user/commandes' ,[
             'orders' => $orders
+        ]);
+    }
+
+    public function detail($token){
+        if(null !== $_SESSION['user'] && $_SESSION['user']) {
+            $file = 'profile';
+            $page = 'Mon profil';
+        }
+        else {
+            $file = 'login';
+            $page = 'Connexion';
+        }
+
+        $orders=$this->orders->all();
+        $userid=$_SESSION['user']->getId();
+        $order= $this->orders->find($token, "token"); 
+        $lignes= $this->ordersbeer->findall($token, 'token');
+        $port=$order->getPort();
+        $beers=[];
+        dd($lignes);
+        foreach($lignes as $key => $ligne){
+            $beers[$key]=$ligne->getBeerId();
+        }
+        dd($beers);
+        return $this->render('user/commandedetail' ,[
+            'order' => $order,
+            'lignes' =>$lignes,
+            'port' => $port
         ]);
     }
 }

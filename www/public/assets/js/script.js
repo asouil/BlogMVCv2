@@ -19,13 +19,10 @@ function getProductsModal(title, img, content, price, id) {
 	$('#modal-body').text(content);
 	$('#modal-body-price').text(price+'€');
 	$('#product_id').attr('onclick', 'addToCart('+id+')');
-
-
 }
 
 function getProductsModal(title, img, content, price, id) {
 	$('#modal-message').removeAttr('class').text('');
-
 	$('#modal-title').text(title);
 	$('#modal-body-img').attr('src', img).attr('alt', title);
 	$('#modal-body').text(content);
@@ -46,18 +43,7 @@ function chooseAddress(id, user_id){
 			$('div.choix').removeClass("bg-secondary");
 		}
 	});
-	// $.post('/choix', {id:id, user_id:user_id}, function(data){
-		
-	// 	if (data !== 'error') {
-	// 		lines = JSON.parse(data);
-	// 		for (const [key, item] of Object.entries(lines)) {
-	// 			document.getElementById(key).value = item;
-	// 		}
-	// 	}else{
-	// 		alert("Une erreur s'est produit!");
-	// 	}
-	// 	console.log(data);
-	// })
+
 	document.getElementById("adress"+id);
 	
 }
