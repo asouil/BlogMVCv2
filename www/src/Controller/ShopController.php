@@ -137,7 +137,7 @@ class ShopController extends Controller
     }
     public function basket()
     {
-        
-        $this->render('shop/panier', $fields);
+        $beers=$this->beer->all();
+        $this->render('shop/panier', ['beers' => $beers]);
     }
 }

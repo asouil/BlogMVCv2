@@ -9,4 +9,9 @@ class MentionsController extends Controller
         $title = "Mentions Légales";
         $this->render("mentions/mentions", [   "title" => $title  ]);
     }
+    public function cgv()
+    {
+        $title = "Conditions générales de vente";
+        $this->render("mentions/CGV", [   "title" => $title  ]);
+    }
 }

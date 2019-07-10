@@ -130,24 +130,14 @@ class UserinfosController extends Controller
         $orders=$this->orders->all();
         $userid=$_SESSION['user']->getId();
         $order= $this->orders->find($token, "token"); 
-        $lignes= $this->ordersbeer->findall($token, 'token');
+        // $lignes= $this->ordersbeer->findall($token, 'token');
         $port=$order->getPort();
-        $beers=[];
-        
-        foreach($lignes as $ligne){
-            foreach($ligne as $key =>$value){
-                if($key==="beer_id"){
-                    $beer[$value]= $this->beer->find($value)->getTitle();
-
-                }  
-            }
-        }
+        $lignes = $this->ordersbeer-> getLigneWithProduct($token);
 
         return $this->render('user/commandedetail' ,[
             'order' => $order,
             'lignes' =>$lignes,
-            'port' => $port,
-            'beer' => $beer
+            'port' => $port
         ]);
     }
 }

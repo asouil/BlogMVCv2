@@ -13,16 +13,6 @@ function calcPrice(obj, id, originalPrice, ajax=false)
 
 function getProductsModal(title, img, content, price, id) {
 	$('#modal-message').removeAttr('class').text('');
-
-	$('#modal-title').text(title);
-	$('#modal-body-img').attr('src', img).attr('alt', title);
-	$('#modal-body').text(content);
-	$('#modal-body-price').text(price+'€');
-	$('#product_id').attr('onclick', 'addToCart('+id+')');
-}
-
-function getProductsModal(title, img, content, price, id) {
-	$('#modal-message').removeAttr('class').text('');
 	$('#modal-title').text(title);
 	$('#modal-body-img').attr('src', img).attr('alt', title);
 	$('#modal-body').text(content);
@@ -64,4 +54,8 @@ function addToBasket(id) {
 			alert('Erreur insertion panier');
 		}
 	})
+
+	function addToCart(id){
+		console.log("je vois");
+	}
 }

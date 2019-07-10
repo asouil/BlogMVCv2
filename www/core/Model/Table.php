@@ -100,4 +100,11 @@ class Table
             );
         }
     }
+
+    public function getLigneWithProduct($token)
+    {
+        return $this->query("SELECT {$this->table}.*, beer.title FROM {$this->table}
+                JOIN beer ON {$this->table}.beer_id = beer.id
+                WHERE token=?", [$token]);
+    }
 }

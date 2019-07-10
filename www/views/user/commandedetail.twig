@@ -16,7 +16,7 @@
 		<tbody>
 			{% for line in lignes %}
 				<tr>
-					<td name="{{ beer[line.beer_id] }}">{{ beer[line.beer_id] }}</td>
+					<td name="{{ line.title }}">{{ line.title }}</td>
 					<td>{{ line.beerpriceHT|number_format(2, ',', '.') }}€</td>
 					<td>{{ (line.beerpriceHT * constant.TVA)|number_format(2, ',', '.') }}€</td>
 					<td id="qty">{{ line.beerQty }}</td>
