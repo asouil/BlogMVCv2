@@ -10,6 +10,7 @@ class UserinfosController extends Controller
         $this->loadModel('userinfos');
         $this->loadModel('orders');
         $this->loadModel('ordersbeer');
+        $this->loadModel('beer');
     }
 
     public function profile($message = null) {
@@ -132,15 +133,21 @@ class UserinfosController extends Controller
         $lignes= $this->ordersbeer->findall($token, 'token');
         $port=$order->getPort();
         $beers=[];
-        dd($lignes);
-        foreach($lignes as $key => $ligne){
-            $beers[$key]=$ligne->getBeerId();
+        
+        foreach($lignes as $ligne){
+            foreach($ligne as $key =>$value){
+                if($key==="beer_id"){
+                    $beer[$value]= $this->beer->find($value)->getTitle();
+
+                }  
+            }
         }
-        dd($beers);
+
         return $this->render('user/commandedetail' ,[
             'order' => $order,
             'lignes' =>$lignes,
-            'port' => $port
+            'port' => $port,
+            'beer' => $beer
         ]);
     }
 }

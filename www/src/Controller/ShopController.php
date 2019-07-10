@@ -127,11 +127,6 @@ class ShopController extends Controller
         if ($form->getUserId() !== $user_id) {
             die('Tentative de hack échouée! Try again.');
         }
-        // $user = $form;
-        // $user = $user->hydrate($form);
-        // echo json_encode($user);
-        // die;
-        
         if($form) {
             echo json_encode($form);
             die;
@@ -143,11 +138,6 @@ class ShopController extends Controller
     public function basket()
     {
         
-        $requiredFields=['user_id', 'beer_id', 'beerPriceHT', 'beerQTY', 'token'];
-        $fields=[];
-        foreach($requiredFields as $key => $value) {
-            $fields[$value] = htmlspecialchars($_POST[$value]);
-        }
         $this->render('shop/panier', $fields);
     }
 }

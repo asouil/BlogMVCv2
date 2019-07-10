@@ -48,7 +48,7 @@ function chooseAddress(id, user_id){
 	
 }
 
-function addBasket(id) {
+function addToBasket(id) {
 	
 	var user_id = document.getElementsById('user_id'+id)[0].value;
 	var beer_id = document.getElementsById('beer_id'+id)[0].value;
