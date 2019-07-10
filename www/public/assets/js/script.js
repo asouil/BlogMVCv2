@@ -40,22 +40,8 @@ function chooseAddress(id, user_id){
 
 function addToBasket(id) {
 	
-	var user_id = document.getElementsById('user_id'+id)[0].value;
-	var beer_id = document.getElementsById('beer_id'+id)[0].value;
-	var beerPriceHT = document.getElementsById('beer_priceHT'+id)[0].value;
-	var beerQTY = document.getElementsById('qty'+id)[0].value;
-	var token = document.getElementsById('token'+id)[0].value;
-	
-	$.post('/panier', {user_id:user_id, beer_id:beer_id, beerPriceHT:beerPriceHT, beerQTY : beerQTY, token:token}, function(data){
-		if (data === "ok") {
-			console.log("basketstyle");
-			alert("Votre produit a bien été ajouté à votre panier");
-		}else{
-			alert('Erreur insertion panier');
-		}
-	})
+	var beer_id = id;
+	console.log('appel'+id);
+	//créer un fichier provisoire pour envoyer post contenant les données de bière au panier
 
-	function addToCart(id){
-		console.log("je vois");
-	}
 }

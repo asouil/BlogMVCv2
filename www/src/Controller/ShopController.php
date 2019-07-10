@@ -20,9 +20,12 @@ class ShopController extends Controller
     }
 
     public function all() {
-
+        $conf=$this->config->last();
+        $conf=$this->config->find($conf);
+        $tva = $conf->getTva();
         $beers = $this->beer->all();
         return $this->render('shop/boutique', [
+            'tva'   => $tva,
             'beers' => $beers
         ]);
     }

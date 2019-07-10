@@ -18,7 +18,7 @@
 				<tr>
 					<td name="{{ beer.title }}">{{ beer.title }}</td>
 					<td>{{ beer.price|number_format(2, ',', '.') }}€</td>
-					<td>{{ beer.price * constant.TVA|number_format(2, ',', '.') }}€</td>
+					<td>{{ (beer.price * constant.TVA)|number_format(2, ',', '.') }}€</td>
 					<td id="qty">{{ qty[key] }}</td>
 					<td>{{ ((beer.price * constant.TVA) * qty[key])|number_format(2, ',', '.') }}€</td>
 				</tr>
