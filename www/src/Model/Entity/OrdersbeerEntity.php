@@ -39,4 +39,12 @@ class OrdersBeerEntity extends Entity
         return $this->token;
     }
 
+    public function setToken(int $lengt){
+        return $this->token = substr(md5(time() . mt_rand()), 0, $lengt);
+    }
+
+    public function setBeerQty(int $nb){
+        $qte = $this->beerQty + $nb;
+        return $this->beerQty=$qte;
+    }
 }
