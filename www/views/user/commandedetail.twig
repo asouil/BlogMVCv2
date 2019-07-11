@@ -17,10 +17,10 @@
 			{% for line in lignes %}
 				<tr>
 					<td name="{{ line.title }}">{{ line.title }}</td>
-					<td>{{ line.beerpriceHT|number_format(2, ',', '.') }}€</td>
-					<td>{{ (line.beerpriceHT * constant.TVA)|number_format(2, ',', '.') }}€</td>
+					<td>{{ line.beerprice|number_format(2, ',', '.') }}€</td>
+					<td>{{ (line.beerprice * tva)|number_format(2, ',', '.') }}€</td>
 					<td id="qty">{{ line.beerQty }}</td>
-					<td>{{ ((line.beerpriceHT * constant.TVA) * line.beerQty)|number_format(2, ',', '.') }}€</td>
+					<td>{{ ((line.beerprice * tva) * line.beerQty)|number_format(2, ',', '.') }}€</td>
 				</tr>
 			{% endfor %}
 			<tr>
@@ -35,7 +35,7 @@
 				<td></td>
 				<td></td>
 				<td></td>
-				<td><strong>{{ (order.priceHT*constant.TVA+port)|number_format(2, ',', '.') }}€</strong></td>
+				<td><strong>{{ (order.priceHT*tva+port)|number_format(2, ',', '.') }}€</strong></td>
 			</tr>
 			
 		</tbody>

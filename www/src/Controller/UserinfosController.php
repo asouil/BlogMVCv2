@@ -133,11 +133,13 @@ class UserinfosController extends Controller
         // $lignes= $this->ordersbeer->findall($token, 'token');
         $port=$order->getPort();
         $lignes = $this->ordersbeer-> getLigneWithProduct($token);
+        $tva=$order->getOrdersTVA();
 
         return $this->render('user/commandedetail' ,[
             'order' => $order,
             'lignes' =>$lignes,
-            'port' => $port
+            'port' => $port,
+            'tva' => $tva
         ]);
     }
 }

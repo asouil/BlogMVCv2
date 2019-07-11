@@ -14,6 +14,12 @@
 						alt="{{ beer.title }}" /></div>
 				<p class="text-truncate">{{ beer.content }}</p>
 				<p class="text-right">{{ (beer.price * tva)|number_format(2, ',', '.') }}€</p>
+				<form method="POST" action="">
+					<input class="form-control" type="number" min="0" name="qty" value="1" />
+					<input type="hidden" name="beer_id" value="{{ beer.id }}" />
+					<input type="hidden" name="beerprice" value="{{ beer.price }}" />
+					<button class="btn btn-primary" type="submit">Ajouter</button>
+				</form>
 			</div>
 			
 				
@@ -40,9 +46,9 @@
 					</div>
 				</div>
 				<div class="modal-footer">
-					<input class="form-control" type="number" min="0" name="qty[{{ beer.id }}]" value="0" oninput="?" />
-					<button class="btn btn-primary" type="button" onclick="addToBasket('{{ beer.id }}')">Ajouter</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+					
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+					
 				</div>
 			</div>
 		</div>

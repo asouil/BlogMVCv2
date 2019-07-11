@@ -1,6 +1,6 @@
 {% extends 'layout/default_beer.twig' %}
 {% block body %}
-<form method="POST" action="/bondecommande" id="formPurchase" class="container mt-5 mb-5">
+<form method="POST" action="/boutique/commande" id="formPurchase" class="container mt-5 mb-5">
 	<table class="table table-striped">
 		<thead>
 			<tr>
@@ -11,12 +11,12 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for key, beer in beers %}
+			{% for key, beer in orderline %}
 				<tr>
 					<td>{{ beer.title }}</td>
-					<td id="PHT_{{ key }}">{{ beer.price|number_format(2, ',', '.') }}€</td>
-					<td id="PTTC_{{ key }}">{{ (beer.price * constant.TVA)|number_format(2, ',', '.') }}€</td>
-					<td><input class="form-control" type="number" min="0" name="qty[{{ beer.id }}]" value="0" oninput="calcPrice(this, {{ key }}, {{ beer.price }});" /></td>
+					<td id="PHT_{{ key }}">{{ beer.beerprice|number_format(2, ',', '.') }}€</td>
+					<td id="PTTC_{{ key }}">{{ (beer.beerprice * constant.TVA)|number_format(2, ',', '.') }}€</td>
+					<td><input class="form-control" type="number" min="0" name="qty[{{ beer.id }}]" value="{{ beer.beerQty }}" oninput="calcPrice(this, {{ key }}, {{ beer.beerprice }});" /></td>
 				</tr>
 			{% endfor %}
 		</tbody>

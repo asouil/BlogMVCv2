@@ -10,7 +10,7 @@ class OrdersBeerEntity extends Entity
     private $id;
     private $user_id;
     private $beer_id;
-    private $beerPriceHT;
+    private $beerpriceHT;
     private $beerQty;
     private $token;
 
@@ -26,8 +26,8 @@ class OrdersBeerEntity extends Entity
         return $this->beerQty;
     }
 
-    public function getBeerPrice() {
-        return $this->beerPriceHT;
+    public function getBeerprice() {
+        return $this->beerpriceHT;
     }
 
     public function getPrice() {

@@ -37,11 +37,3 @@ function chooseAddress(id, user_id){
 	document.getElementById("adress"+id);
 	
 }
-
-function addToBasket(id) {
-	
-	var beer_id = id;
-	console.log('appel'+id);
-	//créer un fichier provisoire pour envoyer post contenant les données de bière au panier
-
-}

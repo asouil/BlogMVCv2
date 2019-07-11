@@ -101,10 +101,11 @@ class Table
         }
     }
 
-    public function getLigneWithProduct($token)
+    public function getLigneWithProduct($token, $col='token')
     {
-        return $this->query("SELECT {$this->table}.*, beer.title FROM {$this->table}
+        return $this->query("SELECT {$this->table}.*, beer.title 
+                FROM {$this->table}
                 JOIN beer ON {$this->table}.beer_id = beer.id
-                WHERE token=?", [$token]);
+                WHERE $col=?", [$token]);
     }
 }

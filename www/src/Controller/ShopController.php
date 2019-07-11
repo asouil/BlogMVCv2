@@ -18,7 +18,10 @@ class ShopController extends Controller
     {
         return $this->render('shop/index');
     }
-
+    public function contact() {
+        return $this->render('mentions/contact', [
+        ]);
+    }
     public function all() {
         $conf=$this->config->last();
         $conf=$this->config->find($conf);
@@ -76,13 +79,12 @@ class ShopController extends Controller
             
             $priceHT=0;
             foreach($commande as $key => $value){
-                $priceHT+=$value['beerpriceHT']*$value['beerQty'];
+                $priceHT+=$value->getbeerprice()*$value->getbeerQty();
             }
 
             //contenu du config
             $conf=$this->config->last();
             $conf=$this->config->find($conf);
-
             $tva = $conf->getTva();//voir pour l'avoir depuis la table config
             $price=$priceHT*$tva;
             if($price>$conf->getShipLimit()){
@@ -115,12 +117,6 @@ class ShopController extends Controller
         ]);
     }
 
-    public function contact() {
-        return $this->render('mentions/contact', [
-        ]);
-    }
-
-
     public function choice()
     {
         $id = $_POST['id'];
@@ -138,9 +134,34 @@ class ShopController extends Controller
             echo 'error';
         }
     }
+
+    public function basketadd()
+    {
+            $qty=$_POST['qty'];
+            $beerid= $_POST['beer_id'];
+            $priceHT=$_POST['beerprice'];
+            
+            if($_SESSION){
+                $userid=$_SESSION['user']->getId();
+            }else{
+                $userid=0;
+            }
+            $token='provisoiretk'; //ici il faudra créer le token et penser à le récupérer dans notre panier
+            $champs=['user_id'=>$userid, 'beer_id'=>$beerid, 'beerQty'=>$qty, 'beerPriceHT'=>$priceHT,'token'=>$token];
+            
+            $ligne=$this->ordersbeer->create($champs);
+            //récupération du post
+            //insertion en BDD dans ordersbeer avec token provisoire
+            return $this->basket();
+    }
+
     public function basket()
     {
-        $beers=$this->beer->all();
-        $this->render('shop/panier', ['beers' => $beers]);
+        
+        //récupération du token créé dans basketadd pour le rechercher
+        $orderline=$this->ordersbeer->getLigneWithProduct('provisoiretk', 'token');
+        
+        
+        $this->render('shop/panier', ['orderline' => $orderline]);
     }
 }
