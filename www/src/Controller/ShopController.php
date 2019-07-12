@@ -237,70 +237,70 @@ class ShopController extends Controller
         $id=$_SESSION['user']->getId();
         // a modifier
         $addresses = $this->userinfos->findUserId($id);
-        if(count($_POST) > 0) {
-            foreach($_POST['qty'] as $key => $value) {
-                if($value > 0) {
-                    $ids[] = $key;
-                    $qty[] = $value;
-                }
-            }
-            if($ids==0){
-                return $this->render('shop/confirmationDeCommande', [
-                ]);
-            }
-            $ids = implode($ids, ',');
-            $beers = $this->beer->getAllInIds($ids);
-            $orderTotal = 0;
-            $fields=[];
+        // if(count($_POST) > 0) {
+        //     foreach($_POST['qty'] as $key => $value) {
+        //         if($value > 0) {
+        //             $ids[] = $key;
+        //             $qty[] = $value;
+        //         }
+        //     }
+        //     if($ids==0){
+        //         return $this->render('shop/confirmationDeCommande', [
+        //         ]);
+        //     }
+        //     $ids = implode($ids, ',');
+        //     $beers = $this->beer->getAllInIds($ids);
+        //     $orderTotal = 0;
+        //     $fields=[];
             
-            foreach($beers as $key => $value) {
-                $fields['user_id']=$id;
-                $fields['beer_id']=$value->getId();
-                $fields['beerQty']=$qty[$key];
-                $fields['beerpriceHT']=$value->getPrice();
-                $fields['token']=$token;
-                $orderTotal += $value->getPrice() * constant('TVA') * $qty[$key];
-                $this->ordersbeer->create($fields);
-            }
-            $ischoice=$this->userinfos->find($_POST['voie']);
-            //envoie de la commande à la bdd
-            $commande=$this->ordersbeer->findall($token, 'token');
-            if(!$ischoice){
-                $ischoice=$_SESSION['user'];
-            }
-            $userinfoid=$ischoice->getId();
+        //     foreach($beers as $key => $value) {
+        //         $fields['user_id']=$id;
+        //         $fields['beer_id']=$value->getId();
+        //         $fields['beerQty']=$qty[$key];
+        //         $fields['beerpriceHT']=$value->getPrice();
+        //         $fields['token']=$token;
+        //         $orderTotal += $value->getPrice() * constant('TVA') * $qty[$key];
+        //         $this->ordersbeer->create($fields);
+        //     }
+        //     $ischoice=$this->userinfos->find($_POST['voie']);
+        //     //envoie de la commande à la bdd
+        //     $commande=$this->ordersbeer->findall($token, 'token');
+        //     if(!$ischoice){
+        //         $ischoice=$_SESSION['user'];
+        //     }
+        //     $userinfoid=$ischoice->getId();
             
-            $priceHT=0;
-            foreach($commande as $key => $value){
-                $priceHT+=$value->getbeerprice()*$value->getbeerQty();
-            }
+        //     $priceHT=0;
+        //     foreach($commande as $key => $value){
+        //         $priceHT+=$value->getbeerprice()*$value->getbeerQty();
+        //     }
 
-            //contenu du config
-            $conf=$this->config->last();
-            $conf=$this->config->find($conf);
-            $tva = $conf->getTva();//voir pour l'avoir depuis la table config
-            $price=$priceHT*$tva;
-            if($price>$conf->getShipLimit()){
-                $port=0;//idem >ship_limit
-            }
-            else{
-                $orderTotal +=$conf->getPort();
-                $port=$conf->getPort(); //idem pour port
-            }
-            $status=1;
+        //     //contenu du config
+        //     $conf=$this->config->last();
+        //     $conf=$this->config->find($conf);
+        //     $tva = $conf->getTva();//voir pour l'avoir depuis la table config
+        //     $price=$priceHT*$tva;
+        //     if($price>$conf->getShipLimit()){
+        //         $port=0;//idem >ship_limit
+        //     }
+        //     else{
+        //         $orderTotal +=$conf->getPort();
+        //         $port=$conf->getPort(); //idem pour port
+        //     }
+        //     $status=1;
             
-            $fields2=['user_id'=>$id, 'userinfos_id'=>$userinfoid, 'priceHT'=>$priceHT, 'port'=>$port, 'ordersTVA'=>$tva, 'token'=>$token, 'status_id'=>$status];
-            $this->orders->create($fields2);
+        //     $fields2=['user_id'=>$id, 'userinfos_id'=>$userinfoid, 'priceHT'=>$priceHT, 'port'=>$port, 'ordersTVA'=>$tva, 'token'=>$token, 'status_id'=>$status];
+        //     $this->orders->create($fields2);
 
-            return $this->render('shop/confirmationDeCommande', [
-                'beers' => $beers,
-                'data' => $_POST,
-                'qty' => $qty,
-                'port' => $port,
-                'order' => $orderTotal,
-                'choix' => $ischoice
-            ]);
-        }
+        //     return $this->render('shop/confirmationDeCommande', [
+        //         'beers' => $beers,
+        //         'data' => $_POST,
+        //         'qty' => $qty,
+        //         'port' => $port,
+        //         'order' => $orderTotal,
+        //         'choix' => $ischoice
+        //     ]);
+        // }
 
         $beers = $this->beer->all();
         

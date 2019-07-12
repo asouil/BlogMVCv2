@@ -3,7 +3,12 @@ require_once '/var/www/vendor/autoload.php';
 
 $pdo = new PDO('mysql:host=labiere.mysql;dbname=blog', 'userblog', 'blogpwd');
 
-//Suppression des tables
+/**
+ * 
+ * Suppression des tables 
+ * 
+ * */
+
 $pdo->exec('DROP TABLE post_category');
 $pdo->exec('DROP TABLE post');
 $pdo->exec('DROP TABLE category');
@@ -16,7 +21,12 @@ $pdo->exec('DROP TABLE userinfos');
 $pdo->exec('DROP TABLE config');
 $pdo->exec('DROP TABLE status');
 
-//creation tables
+/**
+ * 
+ * Creation tables
+ * 
+ * */
+
 echo "[";
 $etape = $pdo->exec("CREATE TABLE post(
             id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -127,26 +137,20 @@ $pdo->exec("CREATE TABLE `config` (
 `date` timestamp NULL DEFAULT current_timestamp(),
 PRIMARY KEY(id)
 )");
-//vidage tables
-$pdo->exec('SET FOREIGN_KEY_CHECKS = 0');
-$pdo->exec('TRUNCATE TABLE post_category');
-$pdo->exec('TRUNCATE TABLE post');
-$pdo->exec('TRUNCATE TABLE category');
-$pdo->exec('TRUNCATE TABLE user');
-$pdo->exec('TRUNCATE TABLE userinfos');
-$pdo->exec('TRUNCATE TABLE beer');
-$pdo->exec('TRUNCATE TABLE orders');
-$pdo->exec('TRUNCATE TABLE ordersbeer');
-$pdo->exec('TRUNCATE TABLE config');
-$pdo->exec('TRUNCATE TABLE status');
-$pdo->exec('SET FOREIGN_KEY_CHECKS = 1');
+
 echo "||||||||||||";
 $faker = Faker\Factory::create('fr_FR');
 echo "||";
 $posts = [];
 $categories = [];
 echo "||";
-//remplissage des tables
+
+/**
+ * 
+ * Remplissage des tables 
+ * 
+ * */
+
 for ($i = 0; $i < 50; $i++) {
     $pdo->exec("INSERT INTO post SET
         name='{$faker->sentence()}',
@@ -202,6 +206,12 @@ $pdo->exec("INSERT INTO `status` (status) VALUES
 ('En cours de préparation'),
 ('Expédié'),
 ('Terminé')");
-//retour au root
+
+/**
+ * 
+ * Retour au root
+ * 
+ */
+
 echo '||]
 ';
