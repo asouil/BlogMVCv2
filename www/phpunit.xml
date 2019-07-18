@@ -9,6 +9,9 @@
             <directory>
                 src
             </directory>
+            <directory>
+                core
+            </directory>
         </whitelist>
     </filter>
 </phpunit>

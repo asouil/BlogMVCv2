@@ -3,7 +3,7 @@ namespace Core\Model;
 
 use \Core\Controller\Database\DatabaseController;
 
-class Table
+abstract class Table
 {
     protected $db;
 
@@ -14,11 +14,32 @@ class Table
         $this->db = $db;
 
         if (is_null($this->table)) {
-            //App\Model\Table\ClassTable
-            $parts = explode('\\', get_class($this));
-            $class_name = end($parts);
-            $this->table = strtolower(str_replace('Table', '', $class_name));
+            $this->table = $this->extractTableName();
         }
+    }
+
+    public function extractTableName(): string
+    {
+            //App\Model\Table\MotMotMotusTable
+            $parts = explode('\\', get_class($this));
+            // [ "App", "Model", "Table", "MotMotMotusTable" ]
+            $class_name = end($parts);
+            //MotMotMotusTable
+            $class_name = str_replace('Table', '', $class_name);
+            //MotMotMotus
+            $newTable = $class_name[0];
+            // $newTable = M
+        for ($i=1; $i < strlen($class_name); $i++) {
+            if (ctype_upper($class_name[$i])) {
+                   $newTable .= "_";
+            }
+                $newTable .= $class_name[$i];
+        }
+            // $newTable =  Mot_Mot_Motus
+
+            $class_name = strtolower($newTable);
+            // $newTable =  mot_mot_motus
+            return $class_name;
     }
 
     public function count()
@@ -31,42 +52,44 @@ class Table
         return $this->query("SELECT MAX(id) as lastId FROM {$this->table}", null, true)->lastId;
     }
 
-    public function find($id, $column='id')
+    public function find($id, $column = 'id')
     {
         return $this->query("SELECT * FROM {$this->table} WHERE $column=?", [$id], true);
     }
-    public function findall($token, $column='token')
-    {
-        return $this->query("SELECT * FROM {$this->table} WHERE $column=?", [$token], false);
-    }
 
-    public function all() {
+    public function all()
+    {
         return $this->query("SELECT * FROM $this->table");
     }
 
-    public function create($fields){
-        $sql_parts = [];// Création d'un tableau vide
-        $attributes = [];// Création d'un tableau vide
-        //On boucle sur le tableau associatif $fields
-        foreach($fields as $k => $v){
-            //$sql_parts[] = "firstname = ?"(si $k = "firstname" etc..)
-            $sql_parts[] = "$k = ?";
-            //echo $k;
-            //$attributes[] = "Bob = ?"(si $v = "Bob" etc..)
-            $attributes[] = $v;
-            //echo $v;
+    public function create($fields, $class = false)
+    {
+        $sql_parts = [];
+        $attributes = [];
+        if ($class) {
+            $methods = get_class_methods($fields);
+            $array = [];
+            foreach ($methods as $value) {
+                if (strrpos($value, 'get') === 0) {
+                    $column = strtolower(explode('get', $value)[1]);
+                    $array[$column] = $fields->$value();
+                }
+            }
+            $fields = $array;
         }
-        //On colle les cases du tableau $sql_parts avec un ", "
+        foreach ($fields as $k => $v) {
+            $sql_parts[] = "$k = ?";
+            $attributes[] = $v;
+        }
         $sql_part = implode(', ', $sql_parts);
-        
-        //Appel de la methode query juste en dessous
         return $this->query("INSERT INTO {$this->table} SET $sql_part", $attributes, true);
     }
 
-    public function update($id, $column, $fields){
+    public function update($id, $column, $fields)
+    {
         $sql_parts = [];
         $attributes = [];
-        foreach($fields as $k => $v){
+        foreach ($fields as $k => $v) {
             $sql_parts[] = "$k = ?";
             $attributes[] = $v;
         }
@@ -75,7 +98,8 @@ class Table
         return $this->query("UPDATE {$this->table} SET $sql_part WHERE $column = ?", $attributes, true);
     }
 
-    public function delete($id){
+    public function delete($id)
+    {
         return $this->query("DELETE FROM {$this->table} WHERE id = ?", [$id], true);
     }
 
@@ -99,13 +123,5 @@ class Table
                 $one
             );
         }
-    }
-
-    public function getLigneWithProduct($token, $col='token')
-    {
-        return $this->query("SELECT {$this->table}.*, beer.title 
-                FROM {$this->table}
-                JOIN beer ON {$this->table}.beer_id = beer.id
-                WHERE $col=?", [$token]);
     }
 }

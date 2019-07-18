@@ -13,27 +13,10 @@ function calcPrice(obj, id, originalPrice, ajax=false)
 
 function getProductsModal(title, img, content, price, id) {
 	$('#modal-message').removeAttr('class').text('');
+
 	$('#modal-title').text(title);
 	$('#modal-body-img').attr('src', img).attr('alt', title);
 	$('#modal-body').text(content);
 	$('#modal-body-price').text(price+'€');
 	$('#product_id').attr('onclick', 'addToCart('+id+')');
-}
-
-function chooseAddress(id, user_id){	
-
-	$('div.choix').on("click",function(){
-		if(!$(this).hasClass("bg-secondary"))
-		{
-			$('div.choix').removeClass("bg-secondary");
-			$(this).addClass("bg-secondary");
-		}
-		else
-		{
-			$('div.choix').removeClass("bg-secondary");
-		}
-	});
-
-	document.getElementById("adress"+id);
-	
 }

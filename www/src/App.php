@@ -5,6 +5,8 @@ use \Core\Controller\RouterController;
 use \Core\Controller\URLController;
 use \Core\Controller\Database\DatabaseMysqlController;
 use \Core\Controller\Database\DatabaseController;
+use \Core\Controller\Session\FlashService;
+use \Core\Controller\Session\PhpSession;
 
 class App
 {
@@ -35,10 +37,6 @@ class App
         }
         define('TVA', 1.2);
         session_start();
-        // $_SESSION['panier'] = array();
-        // $_SESSION['panier']['id_beer'] = array(); 
-        // $_SESSION['panier']['qty'] = array(); 
-        // $_SESSION['panier']['price'] = array(); 
         $numPage = URLController::getPositiveInt('page');
 
         if ($numPage !== null) {
@@ -95,9 +93,8 @@ class App
         return $this->db_instance;
     }
 
-    // public function ajout($id, $price) 
-    // { 
-    //     array_push($_SESSION['panier']['id_beer'],$id); 
-    //     array_push($_SESSION['panier']['price'],$price); 
-    // } 
+    public function flash()
+    {
+        return new FlashService(new PhpSession());
+    }
 }

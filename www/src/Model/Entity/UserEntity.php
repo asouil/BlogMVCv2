@@ -15,7 +15,7 @@ class UserEntity extends Entity
 
     private $token;
 
-    private $createdAt;
+    private $created_at;
 
     private $verify;
 
@@ -27,40 +27,54 @@ class UserEntity extends Entity
         return $this->id;
     }
 
-    /**
-     * Get the value of created_at
-     * @return \DateTime
-     */
-    public function getCreatedAt()
+    public function getMail()
     {
-        return new \DateTime($this->createdAt);
-    }
-
-    public function getMail() {
         return $this->mail;
     }
 
-    public function getPassword() {
+    public function getPassword()
+    {
         return $this->password;
     }
-    public function getToken() 
+
+    public function getVerify()
+    {
+        return $this->verify;
+    }
+
+    public function getToken()
     {
         return $this->token;
     }
-    public function getVerify() {
-        return $this->verify;
+
+    public function getCreatedAt()
+    {
+        return $this->created_at;
     }
 
-    public function setVerify() {
-        return $this->verify;
-    }
-
-    public function setMail(string $mail) {
+    public function setMail(string $mail)
+    {
         $this->mail = $mail;
     }
 
-    public function setPassword(string $password) {
+    public function setPassword(string $password)
+    {
         $password = password_hash(htmlspecialchars($password), PASSWORD_BCRYPT);
         $this->password = $password;
+    }
+
+    public function setToken($token)
+    {
+        $this->token = $token;
+    }
+
+    public function setCreatedAt($createdAt)
+    {
+        $this->created_at = $createdAt;
+    }
+
+    public function setVerify($verify)
+    {
+        $this->verify = $verify;
     }
 }

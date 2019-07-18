@@ -2,30 +2,45 @@
 namespace App\Controller;
 
 use \Core\Controller\Controller;
+use \Core\Controller\MailController;
+use \Core\Controller\URLController;
+use \App\Model\Table\UserTable;
 
 class UsersController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->loadModel('user');
-        $this->loadModel('userinfos');
+        $this->loadModel('UserInfos');
     }
 
-    public function login(): void
-    {
-        $message = false;
-        if(count($_POST) > 1) {
-            $password = htmlspecialchars($_POST['password']);
-            $user = $this->user->getUser(htmlspecialchars($_POST['mail']), $password);
-            if($user) {
-                $_SESSION['user'] = $user;
-                header('location: /');
-                exit();
-            }
-            else {
-                $message = "Adresse mail ou mot de passe incorrect";
+    public function login(): string
+    {   
+        $test =URLController::getUri('category',['slug'=>'iusto-quis-hic-ad-dolores-et','id'=>2]);
+        dd($test);
+        //Création d'un tableau regroupant mes champs requis
+        $form = new \Core\Controller\FormController();
+        $form->field('mail', ["require", "verify"])
+            ->field('password', ["require", "verify", "length" => 8 ]);
+        $errors =  $form->hasErrors();
+        if (!isset($errors["post"])) {
+            //verifier mail password
+            if (empty($errors)) {
+                $datas = $form->getDatas();
+                $user=$this->user->find($datas["mail"], "mail");
+                //verifier que l'adresse mail existe
+                if ($user) {
+                    //crypter le password
+                    $datas["password"] = password_hash($datas["password"], PASSWORD_BCRYPT);
+                    //récupérer l'utilisateur
+                    $user->getUser($datas['mail'], $datas['password']);
+                    return $this->render('user/login', ['user'=> $user]);
+                }
+                
             }
         }
-        $this->profile($message);
+        
+        return $this->render('user/login');
     }
 
     public function logout(): void
@@ -35,95 +50,111 @@ class UsersController extends Controller
         exit();
     }
 
-    public function subscribe() {
-        if(count($_POST) > 0) {
-            //Création d'un tableau regroupant mes champs requis
-            $requiredFields=['mail', 'password'];
-            
-            //On boucle sur le tableau requiredFields
-            foreach($requiredFields as $key => $value) {
-                //On verifie que $_POST["firstname"](si $value="firstname) existe.
-                if(!$_POST[$value]) {
-                    //Si n'existe pas redirection vers page d'inscription
-                    header('location: /inscription');
-                    exit();// PAS OUBLIERRRRRRRRRRR!!!!!!!!
-                }
-                //On Sécurise chaque donnée de $_POST et on les stocke dans $fields[]
-                $fields[$value] = htmlspecialchars($_POST[$value]);
-            }
-
-            if($fields['mail'] == $_POST["mailVerify"]) {// Comparaison d'égalité
-                if($fields['password'] == $_POST["passwordVerify"]) {// Comparaison d'égalité
-                    //Hashage du password $fields["password]
-                    $fields['password'] = password_hash($fields['password'], PASSWORD_BCRYPT);
-                    //Création d'un token
-                    $token = substr(md5(uniqid()), 0, 10);
-
-                    //Création d'une date
-                    $date = new \DateTime('NOW');
-                    $date = $date->format('Y-m-d H:i:s');
+    public function subscribe()
+    {
         
-                    $fields['token']= $token;//Stockage du token dans $fieds["token"]
-                    $fields['createdAt']= $date;//Stockage de date dans $fields['createdAt']
-                    //Appel de la methode create de la Table Parente (core/Table.php)
-                    if($this->user->create($fields)) {
-                        $_SESSION['success'] = "Votre inscription à bien été prise en compte";
-                    }
-                    else {
-                        $_SESSION['error'] = 'une erreur s\'est produite';
-                    }
-                    header('location: /login');
-                    exit();
+        //Création d'un tableau regroupant mes champs requis
+        $form = new \Core\Controller\FormController();
+        //if($form->hasErrors)
+        $form->field('mail', ["require", "verify"])
+            ->field('password', ["require", "verify", "length" => 8 ]);
+        $errors =  $form->hasErrors();
+        if (!isset($errors["post"])) {
+            //verifier mail et mailverify
+            //verifier password et passwordverify
+            if (empty($errors)) {
+                $datas = $form->getDatas();
+                /**@var UserTable $userTable */
+                $userTable = $this->user;
+                //verifier que l'adresse mail n'existe pas
+                if ($userTable->find($datas["mail"], "mail")) {
+                    // sinon quoi faire?
+                    throw new \Exception("utilisateur existe deja");
                 }
+                //crypter password
+                $datas["password"] = password_hash($datas["password"], PASSWORD_BCRYPT);
+                //cree token
+                $datas["token"] = substr(md5(uniqid()), 0, 10);
+                //persister en bdd
+                if (!$userTable->newUser($datas)) {
+                    throw new \Exception("erreur de base de donnée");
+                }
+                //prevenir de l'enregistrement
+                $this->messageFlash()->success("vous êtes bien enregistré");
+                //envoyer mail de confirmation avec le token
+                $mail = new MailController();
+                $mail->object("validez votre compte")
+                    ->to($datas["mail"])
+                    ->message('confirmation', compact("datas"))
+                    ->send();
+                //informer le client qu'il va devoir valider son adresse mail
+                $this->messageFlash()->success("vous avez reçu un mail");
+                header('location: '.$this->generateUrl("usersLogin"));
+                exit();
             }
+            unset($datas["password"]);
+        } else {
+            unset($errors);
         }
-        return $this->render('user/subscribe');
+        return $this->render('user/subscribe', compact("errors", "datas"));
     }
 
-    public function profile($message = null) {
-        if(null !== $_SESSION['user'] && $_SESSION['user']) {
+    public function profile($message = null)
+    {
+        if (null !== $_SESSION['user'] && $_SESSION['user']) {
             $file = 'profile';
             $page = 'Mon profil';
-            $address = $this->userinfos->findUserId($_SESSION['user']->getId());
-            
-        }
-        else {
+            $userInfos = $this->UserInfos->getUserInfosByid($_SESSION['user']->getId());
+        } else {
             $file = 'login';
             $page = 'Connexion';
+            $userInfos = false;
         }
-        $address=$this->userinfos->all();
         return $this->render('user/'.$file, [
             'page' => $page,
             'message' => $message,
-            "addresses" => $address
+            'userInfos' => $userInfos
         ]);
     }
 
+    public function updateUser()
+    {
 
+        if (count($_POST) > 0) {
+            $id = (int) array_pop($_POST);//Stockage de la dernière case de $_POST dans $id
+            //Mise à jours bdd grace à methode update de /core/Table.php
+            $bool = $this->UserInfos->update($id, 'user_id', $_POST);
+            //Mise à jours de la SESSION['user']
+            $user = $this->user->getUserByid($id);
+            $_SESSION['user'] = $user;
+            
+            //Appel de la methode profile de ce controller pour redirection
+            $this->profile('Votre profil a bien été mis à jour');
+            exit();
+        }
+    }
 
-    public function changePassword() {
-        if(count($_POST) > 0) {
+    public function changePassword()
+    {
+        if (count($_POST) > 0) {
             $user = $this->user->getUserById(htmlspecialchars($_POST['id']));
             //Vérification de l'ancien mot de passe mots de passes
-            if(password_verify(htmlspecialchars($_POST['old_password']), $user->getPassword())) {
+            if (password_verify(htmlspecialchars($_POST['old_password']), $user->getPassword())) {
                 //Vérification correspondance des mots de passe
-                if(htmlspecialchars($_POST['password']) == htmlspecialchars($_POST['veriftyPassword'])) {
+                if (htmlspecialchars($_POST['password']) == htmlspecialchars($_POST['veriftyPassword'])) {
                     //Hashage du password
                     $password = password_hash(htmlspecialchars(htmlspecialchars($_POST['password'])), PASSWORD_BCRYPT);
 
                     //Mise à jour de la bdd grace à methode update de /core/Table.php
-                    if($this->user->update($_POST['id'], 'id', ['password' => $password])) {
+                    if ($this->user->update($_POST['id'], 'id', ['password' => $password])) {
                         $message = 'Votre mot de passe a bien été modifié';
-                    }
-                    else {
+                    } else {
                         $message = 'Une erreur s\'est produite';
                     }
-                }
-                else {
+                } else {
                     $message = 'Les mots de passes ne correspondent pas';
                 }
-            }
-            else {
+            } else {
                 $message = 'Mot de passe erroné';
             }
             return $this->profile($message);//Appel de la methode profile de ce controller pour redirection

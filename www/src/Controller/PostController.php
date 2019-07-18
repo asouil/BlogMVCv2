@@ -12,6 +12,7 @@ class PostController extends Controller
         $this->loadModel('category');
     }
 
+
     public function all()
     {
         $paginatedQuery = new PaginatedQueryAppController(
@@ -22,7 +23,7 @@ class PostController extends Controller
         $postById = $paginatedQuery->getItems();
 
         $title = 'Mon Super MEGA blog';
-        $this->render(
+        return $this->render(
             'post/all',
             [
                 "title" => $title,
@@ -34,7 +35,6 @@ class PostController extends Controller
 
     public function show(string $slug, int $id)
     {
-
         $post = $this->post->find($id);
 
         if (!$post) {
@@ -53,7 +53,7 @@ class PostController extends Controller
 
         $title = "article : " . $post->getName();
 
-        $this->render(
+        return $this->render(
             "post/show",
             [
                 "title" => $title,

@@ -23,6 +23,16 @@ services:
       - blog
     env_file:
       - .env
+  mail:
+    container_name:  ${CONTAINER_NAME}.mailcatcher
+    restart: unless-stopped
+    image: schickling/mailcatcher
+    ports:
+      - 1080:1080
+    networks: 
+      - blog
+    env_file:
+      - .env
 
 networks: 
   blog:

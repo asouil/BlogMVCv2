@@ -26,6 +26,12 @@ class RouterController
         return $this;
     }
 
+    public function match(string $uri, string $file, string $name): self
+    {
+        $this->router->map('GET|POST', $uri, $file, $name);
+        return $this;
+    }
+
     public function url(string $name, array $params = []): string
     {
         return $this->router->generate($name, $params);
@@ -41,7 +47,7 @@ class RouterController
                 $controller = "App\\Controller\\" . ucfirst($controller) . "Controller";
                 //try{
 
-                (new $controller())->$methode(...array_values($match['params']));
+                echo (new $controller())->$methode(...array_values($match['params']));
                 //}catch(\Exception $e){
                 //    header($_SERVER["SERVER_PROTOCOL"] . ' 404 Not Found');
                 //    exit();
