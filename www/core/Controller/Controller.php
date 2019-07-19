@@ -69,4 +69,8 @@ class Controller
         }
         return $this->messageFlash;
     }
+
+    protected function getUri(string $cible="", ?array $params){
+        return URLController::getUri($cible, $params);
+    }
 }

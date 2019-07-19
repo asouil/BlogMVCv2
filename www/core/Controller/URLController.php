@@ -29,10 +29,8 @@ class URLController
 
     public static function getUri(string $cible="", ?array $params) :string
     {
-        $test= new Controller();
         $uri = $_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'];
-        $folder = $test->generateUrl($cible, $params);
-        
+        $folder = \App\App::getInstance()->getRouter()->url($cible, $params);
         return $uri.$folder;
     }
 }

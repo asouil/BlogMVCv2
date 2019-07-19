@@ -16,31 +16,37 @@ class UsersController extends Controller
 
     public function login(): string
     {   
-        $test =URLController::getUri('category',['slug'=>'iusto-quis-hic-ad-dolores-et','id'=>2]);
-        dd($test);
+        
+        // $test1=$this->getUri('category',['slug'=>'iusto-quis-hic-ad-dolores-et','id'=>2]);
+        // dump($test1);
+        // //dump($this->getUri('category',['slug'=>'iusto-quis-hic-ad-dolores-et','id'=>2]));
+        // $test =URLController::getUri('category',['slug'=>'iusto-quis-hic-ad-dolores-et','id'=>2]);
+        // dump($test);
+        $page="Connexion :";
         //Création d'un tableau regroupant mes champs requis
         $form = new \Core\Controller\FormController();
         $form->field('mail', ["require", "verify"])
             ->field('password', ["require", "verify", "length" => 8 ]);
         $errors =  $form->hasErrors();
+        $datas = $form->getDatas();
         if (!isset($errors["post"])) {
             //verifier mail password
             if (empty($errors)) {
-                $datas = $form->getDatas();
-                $user=$this->user->find($datas["mail"], "mail");
-                //verifier que l'adresse mail existe
+                //verifier que user existe
+                //verifier que user et password
+                $user = $this->user->getUser($datas["mail"], $datas["password"]);
                 if ($user) {
-                    //crypter le password
-                    $datas["password"] = password_hash($datas["password"], PASSWORD_BCRYPT);
-                    //récupérer l'utilisateur
-                    $user->getUser($datas['mail'], $datas['password']);
-                    return $this->render('user/login', ['user'=> $user]);
+                    $this->flash()->addSuccess("le POST est là");
+                } else {
+                    $this->flash()->addAlert("pas cool");
                 }
-                
+            } else {
+                $this->flash()->addAlert("le formulaire est incomplet");
             }
+            unset($datas['password']);
         }
-        
-        return $this->render('user/login');
+        //erreur afficher message
+        return $this->render('user/login', [compact("datas"), 'page' => $page]);
     }
 
     public function logout(): void
@@ -52,7 +58,7 @@ class UsersController extends Controller
 
     public function subscribe()
     {
-        
+        $page ="Inscription :";
         //Création d'un tableau regroupant mes champs requis
         $form = new \Core\Controller\FormController();
         //if($form->hasErrors)
@@ -96,7 +102,7 @@ class UsersController extends Controller
         } else {
             unset($errors);
         }
-        return $this->render('user/subscribe', compact("errors", "datas"));
+        return $this->render('user/subscribe', [compact("errors", "datas"), 'page' =>$page]);
     }
 
     public function profile($message = null)

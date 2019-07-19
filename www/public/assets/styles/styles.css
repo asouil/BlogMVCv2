@@ -1,20 +1,13 @@
-body{
-margin:0;
-padding:0;
+
+header nav div ul li {
+  font-size: 1.3vw;
 }
-footer{
-  margin:0;
-  padding:0;
-  }
+
 .body{
   min-height: 80vh;
 }
 .vh-10{
   height: 10vh;
-}
-/*HEADER */
-header nav div ul li {
-  font-size: 1.3vw;
 }
 /* ACCUEIL */
 .accueil header {
@@ -75,3 +68,4 @@ header nav div ul li {
     font-size: 1rem;
   }
 }
+

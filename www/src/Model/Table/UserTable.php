@@ -24,6 +24,11 @@ class UserTable extends Table
         return $this->query("SELECT * FROM $this->table
         WHERE $this->table.id = ?", [$id], true);
     }
+    public function getUserByToken($token)
+    {
+        return $this->query("SELECT * FROM $this->table
+        WHERE 'token' = ?", [$token], true);
+    }
 
     public function newUser(array $datas): bool
     {
